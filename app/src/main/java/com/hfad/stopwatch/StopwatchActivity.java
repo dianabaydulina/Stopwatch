@@ -1,22 +1,23 @@
 package com.hfad.stopwatch;
-import android.app.Activity;
+
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.os.Bundle;
-import android.view.View;
-import java.util.Locale;
 import android.os.Handler;
+import android.view.View;
 import android.widget.TextView;
 
-public class StopwatchActivity extends Activity {
-    //Количество секунд на секундомере.
+import java.util.Locale;
+
+public class MainActivity extends AppCompatActivity {
     private int seconds = 0;
-    //Секундомер работает?
     private boolean running;
     private boolean wasRunning;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_stopwatch);
+        setContentView(R.layout.activity_main);
         if (savedInstanceState != null) {
             seconds = savedInstanceState.getInt("seconds");
             running = savedInstanceState.getBoolean("running");
@@ -24,19 +25,12 @@ public class StopwatchActivity extends Activity {
         }
         runTimer();
     }
-
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
         savedInstanceState.putInt("seconds", seconds);
         savedInstanceState.putBoolean("running", running);
         savedInstanceState.putBoolean("wasRunning", wasRunning);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        wasRunning = running;
-        running = false;
     }
     @Override
     protected void onResume() {
@@ -45,21 +39,26 @@ public class StopwatchActivity extends Activity {
             running = true;
         }
     }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        wasRunning = running;
+        running = false;
+    }
 
-    //Запустить секундомер при щелчке на кнопке Start.
     public void onClickStart(View view) {
         running = true;
     }
-    //Остановить секундомер при щелчке на кнопке Stop.
+
     public void onClickStop(View view) {
         running = false;
     }
-    //Сбросить секундомер при щелчке на кнопке Reset.
+
     public void onClickReset(View view) {
         running = false;
         seconds = 0;
     }
-    //Обновление показаний таймера.
+
     private void runTimer() {
         final TextView timeView = (TextView)findViewById(R.id.time_view);
         final Handler handler = new Handler();
